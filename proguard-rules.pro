@@ -35,6 +35,15 @@
 -keepclassmembers class de.blinkt.openvpn.core.VPNLaunchHelper {public *;}
 -keep class de.blinkt.openvpn.core.VpnStatus$ByteCountListener
 -keep class de.blinkt.openvpn.core.VpnStatus$StateListener
+# Keep the OpenVPN log plumbing consumed by the Auto Mode log tap
+# (AutoModeModuleLogTap implements VpnStatus.LogListener and takes a
+# LogItem in newLog). vpnLib's own minify strips these as unused by the
+# library itself; if they are dropped here they become "missing class"
+# in the app and break class verification of AutoModeModuleLogTap,
+# producing a runtime NoClassDefFoundError / ClassNotFoundException.
+-keep class de.blinkt.openvpn.core.VpnStatus$LogListener { *; }
+-keep class de.blinkt.openvpn.core.LogItem { *; }
+-keep class de.blinkt.openvpn.core.LogItem$* { *; }
 -keep class de.blinkt.openvpn.core.VpnStatus
 -keepclassmembers class de.blinkt.openvpn.core.VpnStatus {public *;}
 -keep class de.blinkt.openvpn.utils.**
